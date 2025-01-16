@@ -160,3 +160,25 @@ jobs:
         echo "dockerhub_username: $DOCKER_HUB_USER_NAME" >> tests.yml
     - name: Run Yandex Tests
       run: pytest tests
+
+  telegramm-notify:
+      runs-on: ubuntu-latest
+      needs:
+      - build_backend_and_push_to_docker_hub
+      - build_frontend_and_push_to_docker_hub
+      - build_gateway_and_push_to_docker_hub
+      - deploy
+      - auto_yandex_tests
+      steps:
+        - name: Notify via telegram
+          uses: appleboy/telegram-action@master
+          with:
+            to: ${{ secrets.TELEGRAMM_CHAT_ID }}
+            token: ${{ secrets.TELEGRAMM_TOKEN }}
+            message: |
+              ${{ github.actor }} created commit:
+              Commit message: ${{ github.event.commits[0].message }}
+
+              Repository: ${{ github.repository }}
+
+              Link: https://github.com/${{ github.repository }}/commit/${{github.sha}}
