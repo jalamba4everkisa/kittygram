@@ -1,0 +1,40 @@
+version: '3'
+
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13.10
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  backend:
+    container_name: backend
+    image: jalambakisa/kittygram_backend
+    env_file: .env
+    depends_on:
+      - postgres
+    volumes:
+      - media:/app/media/
+      - static:/app/collected_static/
+  frontend:
+    container_name: frontend
+    env_file: .env
+    image: jalambakisa/kittygram_frontend
+    volumes:
+      - static:/app/build/
+  gateway:
+    container_name: gateway
+    image: jalambakisa/kittygram_gateway
+    ports:
+      - "80:80" 
+    volumes:
+      - static:/static
+      - media:/media
+    depends_on:
+      - frontend
+      - backend
