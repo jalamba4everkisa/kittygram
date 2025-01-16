@@ -18,15 +18,10 @@ services:
     env_file: .env
     depends_on:
       - postgres
-    volumes:
-      - media:/app/media/
-      - static:/app/collected_static/
   frontend:
     container_name: frontend
     env_file: .env
     image: jalambakisa/kittygram_frontend
-    volumes:
-      - static:/app/build/
   gateway:
     container_name: gateway
     image: jalambakisa/kittygram_gateway
