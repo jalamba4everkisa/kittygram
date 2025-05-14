@@ -11,6 +11,7 @@ on:
         description: "IP addr of kittygram-vm"
         value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
 
+jobs:
   plan:
     runs-on: ubuntu-latest
     if: ${{ inputs.exec == 'plan' }}
