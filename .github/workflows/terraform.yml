@@ -38,7 +38,6 @@ jobs:
 
     - name: Terraform Plan
       working-directory: ./infra
-      if: ${{ github.event.inputs.action == 'plan' }}
       run: terraform plan
       env:
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
