@@ -1,7 +1,7 @@
 name: Main workflow
 
 on:
-  workflow_call:
+  workflow_dispatch:
     branches:
       - main
 
