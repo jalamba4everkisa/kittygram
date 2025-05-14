@@ -6,10 +6,10 @@ on:
       exec:
         required: true
         type: string
-    outputs:
-      instance_ip_addr:
-        description: "IP addr of kittygram-vm"
-        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
+#    outputs:
+#      instance_ip_addr:
+#        description: "IP addr of kittygram-vm"
+#        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
 
 jobs:
   plan:
