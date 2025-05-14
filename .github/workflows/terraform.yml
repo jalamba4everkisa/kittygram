@@ -1,0 +1,44 @@
+name: Terraform
+
+on:
+  workflow_call:
+    inputs:
+      exec:
+        required: true
+        type: string
+    outputs:
+      instance_ip_addr:
+        description: "IP addr of kittygram-vm"
+        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
+
+  plan:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.exec == 'plan' }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.8.3
+
+    - name: Set up Yandex Cloud service account key
+      working-directory: ./infra
+      run: |
+        echo "${{ secrets.SERVICE_KEY }}" | base64 -d > ./authorized_key.json
+
+    - name: Initialize Terraform
+      working-directory: ./infra
+      run: terraform init -backend-config="access_key=$ACCESS_KEY" -backend-config="secret_key=$SECRET_KEY"
+      env:
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+    - name: Terraform Plan
+      working-directory: ./infra
+      if: ${{ github.event.inputs.action == 'plan' }}
+      run: terraform plan
+      env:
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
