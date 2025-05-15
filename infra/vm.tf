@@ -23,8 +23,7 @@ resource "yandex_compute_instance" "kittygram-vm" {
     nat       = true
   }
 
-  serial-port-enable = "1"
-  user-data = templatefile("${path.module}/init/vm-install.yml", 
+  user_data = templatefile("${path.module}/init/vm-install.yml", 
     {
       SSH_KEY = var.PUB_SSH_KEY
     })
