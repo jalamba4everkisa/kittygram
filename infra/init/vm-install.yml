@@ -4,7 +4,7 @@ package_upgrade: true
 
 ssh_pwauth: no
 users:
-  - name: user
+  - name: kittygram
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
     ssh-authorized-keys:
