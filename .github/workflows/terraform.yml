@@ -6,10 +6,10 @@ on:
       exec:
         required: true
         type: string
-    outputs:
-      external_ip_address_kittygram_vm:
-        description: "IP addr of kittygram-vm"
-        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
+#    outputs:
+#      external_ip_address_kittygram_vm:
+#        description: "IP addr of kittygram-vm"
+#        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
 
 jobs:
   plan:
@@ -51,8 +51,8 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     if: ${{ inputs.exec == 'apply' }}
-    outputs:
-      external_ip_address_kittygram_vm: ${{ steps.output.outputs.external_ip_address_kittygram_vm }}
+#    outputs:
+#      external_ip_address_kittygram_vm: ${{ steps.output.outputs.external_ip_address_kittygram_vm }}
     steps:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -68,12 +68,12 @@ jobs:
           ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
       - name: Terraform apply
-        id: output
+#        id: output
         working-directory: ./infra
         run: |
          terraform apply -auto-approve
-          export IP=$(terraform output -raw external_ip_address_kittygram_vm) && echo "external_ip_address_kittygram_vmance_ip_addr=$IP"
-          IP=`terraform output -raw external_ip_address_kittygram_vm` echo "external_ip_address_kittygram_vm=$IP" >> $GITHUB_OUTPUT
+#          export IP=$(terraform output -raw external_ip_address_kittygram_vm) && echo "external_ip_address_kittygram_vm=$IP"
+#          IP=`terraform output -raw external_ip_address_kittygram_vm` echo "external_ip_address_kittygram_vm=$IP" >> $GITHUB_OUTPUT
         env:
           TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
           TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}

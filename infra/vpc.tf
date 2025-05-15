@@ -10,7 +10,7 @@ resource "yandex_vpc_subnet" "subnet" {
 }
 
 output "external_ip_address_kittygram_vm" {
-  value = yandex_compute_instance.kittygram-vm.network_interface.0.nat_ip_address
+  value = "${yandex_compute_instance.kittygram-vm.network_interface.0.nat_ip_address}"
 }
 
 resource "yandex_vpc_security_group" "kittygram-sg" {
