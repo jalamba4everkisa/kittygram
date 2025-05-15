@@ -74,3 +74,7 @@ jobs:
          terraform apply -auto-approve
           export IP=$(terraform output -raw external_ip_address_kittygram_vm) && echo "instexternal_ip_address_kittygram_vmance_ip_addr=$IP"
           IP=`terraform output -raw external_ip_address_kittygram_vm` echo "external_ip_address_kittygram_vm=$IP" >> $GITHUB_OUTPUT
+        TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
+        TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+        TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+        TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
