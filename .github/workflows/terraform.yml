@@ -61,6 +61,10 @@ jobs:
           terraform_version: v1.11.2
       - name: Check out code
         uses: actions/checkout@v3
+      - name: Set up Yandex Cloud service account key
+        working-directory: ./infra
+        run: |
+          echo "${{ secrets.YC_KEY_JSON }}" | base64 -d > ./authorized_key.json
       - name: Terraform init
         working-directory: ./infra
         run: terraform init -backend-config="access_key=$ACCESS_KEY" -backend-config="secret_key=$SECRET_KEY"
