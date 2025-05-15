@@ -83,3 +83,28 @@ jobs:
           TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
+
+  destroy:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.exec == 'destroy' }}
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: v1.11.2
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Terraform init
+        working-directory: ./infra
+        run: terraform init -backend-config="access_key=$ACCESS_KEY" -backend-config="secret_key=$SECRET_KEY"
+        env:
+          ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      - name: Terraform destroy
+        working-directory: ./infra
+        run: terraform destroy -auto-approve
+        env:
+          TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
+          TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
+          TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
+          TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
