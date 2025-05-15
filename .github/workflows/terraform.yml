@@ -38,7 +38,7 @@ jobs:
 
     - name: Terraform Plan
       working-directory: ./infra
-      run: terraform plan
+      run: TF_LOG=DEBUG terraform plan
       env:
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
