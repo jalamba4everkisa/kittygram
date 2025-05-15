@@ -18,8 +18,9 @@ write_files:
       apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       usermod -aG docker kittygram
     path: "/root/vm_prep.sh"
-    permissions: "0740"
+    permissions: '0755'
+    owner: root:root
 runcmd:
   - sleep 20
-  - sudo -i
-  - /root/vm_prep.sh
+  - [bash, /root/vm_prep.sh]
+  - [systemctl, restart, docker]
