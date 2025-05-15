@@ -19,8 +19,7 @@ write_files:
       usermod -aG docker kittygram
     path: "/root/vm_prep.sh"
     permissions: "0740"
-
 runcmd:
-  - sleep 120
+  - sleep 20
   - sudo -i
   - /root/vm_prep.sh
