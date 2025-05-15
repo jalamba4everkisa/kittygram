@@ -6,10 +6,10 @@ on:
       exec:
         required: true
         type: string
-#    outputs:
-#      instance_ip_addr:
-#        description: "IP addr of kittygram-vm"
-#        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
+    outputs:
+      instance_ip_addr:
+        description: "IP addr of kittygram-vm"
+        value: ${{ jobs.apply.outputs.external_ip_address_kittygram_vm }}
 
 jobs:
   plan:
@@ -27,7 +27,7 @@ jobs:
     - name: Set up Yandex Cloud service account key
       working-directory: ./infra
       run: |
-        echo "${{ secrets.SERVICE_KEY }}" > ./authorized_key.json
+        echo "${{ secrets.YC_KEY_JSON }}" | base64 -d > ./authorized_key.json
 
     - name: Initialize Terraform
       working-directory: ./infra
@@ -42,3 +42,31 @@ jobs:
       env:
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
+
+  apply:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.exec == 'apply' }}
+    outputs:
+      instance_ip_addr: ${{ steps.output.outputs.instance_ip_addr }}
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+          terraform_version: v1.11.2
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Terraform init
+        working-directory: ./infra
+        run: terraform init -backend-config="access_key=$ACCESS_KEY" -backend-config="secret_key=$SECRET_KEY"
+        env:
+          ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      - name: Terraform apply
+        id: output
+        working-directory: ./infra
+        run: |
+          terraform apply -auto-approve
+          export IP=$(terraform output -raw external_ip_address_kittygram_vm) && echo "instexternal_ip_address_kittygram_vmance_ip_addr=$IP"
+          IP=`terraform output -raw external_ip_address_kittygram_vm` echo "external_ip_address_kittygram_vm=$IP" >> $GITHUB_OUTPUT
