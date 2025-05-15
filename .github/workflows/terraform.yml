@@ -42,7 +42,7 @@ jobs:
       env:
         ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
+        TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
 
 
 #  apply:
