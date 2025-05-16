@@ -6,6 +6,10 @@ on:
       exec:
         required: true
         type: string
+    outputs:
+      kittygram_ip:
+        description: "IP addr of kitty-vm"
+        value: ${{ jobs.apply.outputs.kittygram_ip }}
 
 jobs:
   plan:
@@ -47,6 +51,8 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     if: ${{ inputs.exec == 'apply' }}
+    outputs:
+      kittygram_ip: ${{ steps.output.outputs.kittygram_ip }}
     steps:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -76,9 +82,9 @@ jobs:
           TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
-      - name: Use the IP
-        run: |
-          echo "The VM IP is ${{ steps.ip.outputs.kittygram_ip}}"
+      #- name: Use the IP
+      #  run: |
+      #    echo "The VM IP is ${{ steps.ip.outputs.kittygram_ip}}"
 
   destroy:
     runs-on: ubuntu-latest
