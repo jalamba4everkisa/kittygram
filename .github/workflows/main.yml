@@ -28,35 +28,34 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       YC_KEY_JSON: ${{ secrets.YC_KEY_JSON }}
 
-  artifact:
-    outputs:
-      kittygram_ip: ${{ steps.set_outputs.outputs.kittygram_ip }}
-    if: ${{ github.event.inputs.action == 'apply' }}
-    runs-on: ubuntu-latest
-    needs: terraform
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  #artifact:
+  #  outputs:
+  #    kittygram_ip: ${{ steps.set_output.outputs.kittygram_ip }}
+  #  if: ${{ github.event.inputs.action == 'apply' }}
+  #  runs-on: ubuntu-latest
+  #  needs: terraform
+  #  steps:
+  #  - name: Checkout code
+  #    uses: actions/checkout@v4#
 
-    - name: Download IP artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: kittygram_ip
-        path: ./
-    - name: Set IP
-      id: set_outputs
-      run: |
-        IP=$(cat ./kittygram_ip.txt)
-        echo "::set-output name=kittygram_ip::$IP"
+  #  - name: Download IP artifact
+  #    uses: actions/download-artifact@v4
+  #    with:
+  #      name: kittygram_ip
+  #      path: ./
+  #  - name: Set IP
+  #    id: set_output
+  #    run: |
+  #      IP=$(cat ./kittygram_ip.txt)
+  #      echo "kittygram_ip=$IP" >> $GITHUB_OUTPUT
 #echo "needs.artifact.outputs.kittygram_ip = ${{ needs.artifact.outputs.kittygram_ip }}"
 
 
   tests:
     if: ${{ github.event.inputs.action == 'apply' }}
     runs-on: ubuntu-latest
-    needs: artifact
+    needs: terraform
     steps:
-
     - name: Check out code
       uses: actions/checkout@v3
     - name: Set up Python
@@ -143,8 +142,6 @@ jobs:
 
   deploy:
     if: ${{ github.event.inputs.action == 'apply' }}
-    outputs:
-      kittygram_ip: ${{ steps.set_outputs.outputs.kittygram_ip }}
     runs-on: ubuntu-latest
     needs:
       - build_backend_and_push_to_docker_hub
@@ -153,11 +150,16 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
+    - name: Download IP artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: kittygram_ip
+        path: ./
     - name: Set IP
-      id: set_outputs
+      id: KITTYGRAM_IP
       run: |
         IP=$(cat ./kittygram_ip.txt)
-        echo "::set-output name=kittygram_ip::$IP"
+        echo "KITTYGRAM_IP=$IP" >> $GITHUB_OUTPUT
     - shell: bash
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
@@ -173,7 +175,7 @@ jobs:
       uses: appleboy/scp-action@master
       with:
         #host: ${{ secrets.HOST }}
-        host: ${{ needs.artifact.outputs.kittygram_ip }}
+        host: ${{ env.KITTYGRAM_IP }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "docker-compose.production.yml"
@@ -182,7 +184,7 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         #host: ${{ secrets.HOST }}
-        host: ${{ needs.artifact.outputs.kittygram_ip }}
+        host: ${{ env.KITTYGRAM_IP }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
@@ -193,8 +195,6 @@ jobs:
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
 
   auto_yandex_tests:
-    outputs:
-      kittygram_ip: ${{ steps.set_outputs.outputs.kittygram_ip }}
     if: ${{ github.event.inputs.action == 'apply' }}
     runs-on: ubuntu-latest
     needs:
@@ -205,11 +205,6 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
-    - name: Set IP
-      id: set_outputs
-      run: |
-        IP=$(cat ./kittygram_ip.txt)
-        echo "::set-output name=kittygram_ip::$IP"
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -222,7 +217,7 @@ jobs:
       env:
         REPOSITORY_USER_NAME: ${{ secrets.REPOSITORY_USER_NAME }}
         #DOMAIN: ${{ secrets.DOMAIN }}
-        DOMAIN: ${{ needs.artifact.outputs.kittygram_ip }}
+        DOMAIN: ${{ env.KITTYGRAM_IP}}
         DOCKER_HUB_USER_NAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
       run: |
         echo "repo_owner: $REPOSITORY_USER_NAME" >> tests.yml
