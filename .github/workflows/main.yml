@@ -72,11 +72,12 @@ jobs:
         python-version: 3.9
     - name: Install dependencies
       run: |
-        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
         python -m pip install --upgrade pip 
         pip install flake8==6.0.0 flake8-isort==6.0.0
     - name: Test with flake8
       run: python -m flake8 --ignore=F401,E501,W291,W292,E301,W293,E123,I001,I004,E265,I003   backend/
+    - name: Testing variable
+      run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
 
   build_backend_and_push_to_docker_hub:
     if: ${{ github.event.inputs.action == 'apply' }}
@@ -170,7 +171,6 @@ jobs:
         echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
         echo "DATABASE_URL=$DATABASE_URL" >> .env
 
-    - name: Testing variable
     - name: Copy docker-compose.yml via ssh
       uses: appleboy/scp-action@master
       with:
