@@ -86,10 +86,10 @@ jobs:
          echo "VM IP: $IP"
          echo "$IP" > kittygram_ip.txt
         env:
-          TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
-          TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-          TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
+          TF_VAR_PUB_SSH_KEY: ${{ secrets.TF_VAR_PUB_SSH_KEY }}
+          TF_VAR_YC_CLOUD_ID: ${{ secrets.TF_VAR_YC_CLOUD_ID }}
+          TF_VAR_YC_FOLDER_ID: ${{ secrets.TF_VAR_YC_FOLDER_ID }}
+          TF_VAR_YC_ZONE: ${{ secrets.TF_VAR_YC_ZONE }}
 
       - name: Upload IP as artifact
         uses: actions/upload-artifact@v4
@@ -125,7 +125,7 @@ jobs:
         working-directory: ./infra
         run: terraform destroy -auto-approve
         env:
-          TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
-          TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
-          TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
-          TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
+          TF_VAR_PUB_SSH_KEY: ${{ secrets.TF_VAR_PUB_SSH_KEY }}
+          TF_VAR_YC_CLOUD_ID: ${{ secrets.TF_VAR_YC_CLOUD_ID }}
+          TF_VAR_YC_FOLDER_ID: ${{ secrets.TF_VAR_YC_FOLDER_ID }}
+          TF_VAR_YC_ZONE: ${{ secrets.TF_VAR_YC_ZONE }}
