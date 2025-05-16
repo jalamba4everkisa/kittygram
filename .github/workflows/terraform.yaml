@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kittygram_ip
-          path: kittygram_ip.txt
+          path: ./infra/kittygram_ip.txt
       
       #- name: Use the IP
       #  run: |
