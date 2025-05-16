@@ -77,7 +77,7 @@ jobs:
 
       - name: Verify Outputs Exist
         run: |
-          terraform output kittygram_ip  # This should show your IP
+          terraform output kittygram_ip 
       
   destroy:
     runs-on: ubuntu-latest
