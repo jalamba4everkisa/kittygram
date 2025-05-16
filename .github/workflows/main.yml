@@ -169,8 +169,10 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
-    - shell: bash
-      run: echo ${{ needs.set_ip.outputs.kittygram_ip }}
+    - name: Sleep for 2 minutes
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '120s'
     - shell: bash
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
