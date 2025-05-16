@@ -173,8 +173,8 @@ jobs:
       uses: jakejarvis/wait-action@master
       with:
         time: '120s'
-    - name: Executing remote ssh commands to deploy
-      uses: appleboy/ssh-action@master
+    - name: Executing remote creation of .env file
+      uses: appleboy/ssh-action@v1
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
