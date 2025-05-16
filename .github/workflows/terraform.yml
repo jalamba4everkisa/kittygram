@@ -74,6 +74,7 @@ jobs:
           TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
+
       - name: List all outputs (for debugging)
         run: terraform output
       
