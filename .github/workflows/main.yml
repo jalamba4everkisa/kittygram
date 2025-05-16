@@ -54,7 +54,7 @@ jobs:
     - name: Set IP
       id: set_outputs
       run: |
-        IP=$(cat ./infra/kittygram_ip.txt)
+        IP=$(cat ./kittygram_ip.txt)
         echo "::set-output name=kittygram_ip::$IP"
 
   tests:
