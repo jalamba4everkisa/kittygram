@@ -175,15 +175,16 @@ jobs:
         time: '120s'
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
-      with:
-        host: ${{ needs.set_ip.outputs.kittygram_ip }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.SSH_KEY }}
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      with:
+        host: ${{ needs.set_ip.outputs.kittygram_ip }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSH_KEY }}
+        envs: POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, DATABASE_URL
       run: |
         echo "POSTGRES_DB=$POSTGRES_DB" >> .env
         echo "POSTGRES_USER=$POSTGRES_USER" >> .env
