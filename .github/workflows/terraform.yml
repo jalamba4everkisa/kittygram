@@ -6,6 +6,15 @@ on:
       exec:
         required: true
         type: string
+    secrets:
+        TF_VAR_PUB_SSH_KEY: 
+          required: true
+        TF_VAR_YC_CLOUD_ID: 
+          required: true
+        TF_VAR_YC_FOLDER_ID:
+          required: true 
+        TF_VAR_YC_ZONE:
+          required: true
 
 jobs:
   plan:
