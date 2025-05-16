@@ -193,6 +193,8 @@ jobs:
           sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
 
   auto_yandex_tests:
+    outputs:
+      kittygram_ip: ${{ steps.set_outputs.outputs.kittygram_ip }}
     if: ${{ github.event.inputs.action == 'apply' }}
     runs-on: ubuntu-latest
     needs:
@@ -203,6 +205,11 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v3
+    - name: Set IP
+      id: set_outputs
+      run: |
+        IP=$(cat ./kittygram_ip.txt)
+        echo "::set-output name=kittygram_ip::$IP"
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
