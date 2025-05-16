@@ -201,6 +201,10 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "docker-compose.production.yml"
         target: "./"
+    - name: Sleep for 1 minute
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '60s'
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
