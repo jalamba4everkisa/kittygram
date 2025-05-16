@@ -6,21 +6,21 @@ on:
       exec:
         required: true
         type: string
-#    secrets:
-#        TF_VAR_PUB_SSH_KEY: 
-#          required: true
-#        TF_VAR_YC_CLOUD_ID: 
-#          required: true
-#        TF_VAR_YC_FOLDER_ID:
-#          required: true 
-#        TF_VAR_YC_ZONE:
-#          required: true
-#        ACCESS_KEY: 
-#          required: true
-#        SECRET_KEY:
-#          required: true
-#        YC_KEY_JSON:
-#          required: true
+    secrets:
+        TF_VAR_PUB_SSH_KEY: 
+          required: true
+        TF_VAR_YC_CLOUD_ID: 
+          required: true
+        TF_VAR_YC_FOLDER_ID:
+          required: true 
+        TF_VAR_YC_ZONE:
+          required: true
+        ACCESS_KEY: 
+          required: true
+        SECRET_KEY:
+          required: true
+        YC_KEY_JSON:
+          required: true
 
 jobs:
   plan:
