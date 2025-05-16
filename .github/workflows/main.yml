@@ -16,7 +16,7 @@ on:
           - destroy
 jobs:
   terraform:
-    uses: ./.github/workflows/terraform.yaml
+    uses: ./.github/workflows/terraform.yml
     with:
       exec: ${{ github.event.inputs.action }}
     secrets:
