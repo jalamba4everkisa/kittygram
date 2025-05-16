@@ -74,15 +74,9 @@ jobs:
           TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
-      - name: Get VM IP Address
-        id: ip
-        run: echo "vm_ip=$(terraform output -raw vm_ip_address)" >> $GITHUB_OUTPUT
-      - name: Use the IP address in subsequent steps
-        run: |
-          echo "The VM IP address is ${{ steps.ip.outputs.vm_ip }}"
-          # You can use this IP for other tasks like:
-          # ssh user@${{ steps.ip.outputs.vm_ip }} -o StrictHostKeyChecking=no "command"
-  
+      - name: List all outputs (for debugging)
+        run: terraform output
+      
   destroy:
     runs-on: ubuntu-latest
     if: ${{ inputs.exec == 'destroy' }}
