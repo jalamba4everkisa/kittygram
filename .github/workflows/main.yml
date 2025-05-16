@@ -173,8 +173,9 @@ jobs:
       uses: jakejarvis/wait-action@master
       with:
         time: '120s'
+
     - name: Executing remote creation of .env file
-      uses: appleboy/ssh-action@v1
+      uses: appleboy/ssh-action@master
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -185,11 +186,12 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         envs: POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, DATABASE_URL
-      script: |
-        echo "POSTGRES_DB=$POSTGRES_DB" >> .env
-        echo "POSTGRES_USER=$POSTGRES_USER" >> .env
-        echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
-        echo "DATABASE_URL=$DATABASE_URL" >> .env
+        script: |
+          echo "POSTGRES_DB=$POSTGRES_DB" >> .env
+          echo "POSTGRES_USER=$POSTGRES_USER" >> .env
+          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
+          echo "DATABASE_URL=$DATABASE_URL" >> .env
+
     - name: Copy docker-compose.yml via ssh
       uses: appleboy/scp-action@master
       with:
