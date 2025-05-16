@@ -95,7 +95,6 @@ jobs:
 
       - name: Upload IP as artifact
         uses: actions/upload-artifact@v4
-        working-directory: ./infra
         with:
           name: kittygram_ip
           path: kittygram_ip.txt
