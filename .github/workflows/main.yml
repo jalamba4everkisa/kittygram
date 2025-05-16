@@ -34,7 +34,7 @@ jobs:
     - name: Download IP artifact
       uses: actions/download-artifact@v4
       with:
-        name: vm-ip
+        name: kittygram_ip
         path: ./
     
     - name: Read IP from file
