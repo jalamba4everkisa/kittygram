@@ -56,6 +56,8 @@ jobs:
       run: |
         IP=$(cat ./kittygram_ip.txt)
         echo "::set-output name=kittygram_ip::$IP"
+#echo "needs.artifact.outputs.kittygram_ip = ${{ needs.artifact.outputs.kittygram_ip }}"
+
 
   tests:
     if: ${{ github.event.inputs.action == 'apply' }}
@@ -70,7 +72,6 @@ jobs:
         python-version: 3.9
     - name: Install dependencies
       run: |
-        echo "needs.artifact.outputs.kittygram_ip = ${{ needs.artifact.outputs.kittygram_ip }}"
         python -m pip install --upgrade pip 
         pip install flake8==6.0.0 flake8-isort==6.0.0
     - name: Test with flake8
@@ -170,7 +171,8 @@ jobs:
     - name: Copy docker-compose.yml via ssh
       uses: appleboy/scp-action@master
       with:
-        host: ${{ secrets.HOST }}
+        #host: ${{ secrets.HOST }}
+        host: ${{ needs.artifact.outputs.kittygram_ip }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "docker-compose.production.yml"
@@ -178,7 +180,8 @@ jobs:
     - name: Executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
+        #host: ${{ secrets.HOST }}
+        host: ${{ needs.artifact.outputs.kittygram_ip }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
@@ -210,7 +213,8 @@ jobs:
     - shell: bash
       env:
         REPOSITORY_USER_NAME: ${{ secrets.REPOSITORY_USER_NAME }}
-        DOMAIN: ${{ secrets.DOMAIN }}
+        #DOMAIN: ${{ secrets.DOMAIN }}
+        DOMAIN: ${{ needs.artifact.outputs.kittygram_ip }}
         DOCKER_HUB_USER_NAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
       run: |
         echo "repo_owner: $REPOSITORY_USER_NAME" >> tests.yml
