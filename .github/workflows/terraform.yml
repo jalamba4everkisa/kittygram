@@ -15,6 +15,10 @@ on:
           required: true 
         TF_VAR_YC_ZONE:
           required: true
+        ACCESS_KEY: 
+          required: true
+        SECRET_KEY:
+          required: true
 
 jobs:
   plan:
