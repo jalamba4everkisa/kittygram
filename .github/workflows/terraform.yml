@@ -69,16 +69,13 @@ jobs:
         working-directory: ./infra
         run: |
          terraform apply -auto-approve
+         terraform output
         env:
           TF_VAR_PUB_SSH_KEY: ${{ secrets.PUB_SSH_KEY }}
           TF_VAR_YC_CLOUD_ID: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_YC_FOLDER_ID: ${{ secrets.YC_FOLDER_ID }}
           TF_VAR_YC_ZONE: ${{ secrets.YC_ZONE }}
 
-      - name: Verify Outputs Exist
-        run: |
-          terraform output kittygram_ip 
-      
   destroy:
     runs-on: ubuntu-latest
     if: ${{ inputs.exec == 'destroy' }}
