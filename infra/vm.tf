@@ -4,7 +4,6 @@ resource "yandex_compute_disk" "boot-disk" {
   zone     = "ru-central1-a"
   size     = "20"
   image_id = "fd866d9q7rcg6h4udadk"
-  folder_id = var.YC_FOLDER_ID
 }
 
 resource "yandex_compute_instance" "kittygram-vm" {
