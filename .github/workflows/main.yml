@@ -143,7 +143,7 @@ jobs:
       kittygram_ip: ${{ steps.set_ip.outputs.ip }}
     if: ${{ github.event.inputs.action == 'apply' }}
     runs-on: ubuntu-latest
-    needs: terraform
+    needs: tests
     steps:
     - name: Checkout code
       uses: actions/checkout@v4#
