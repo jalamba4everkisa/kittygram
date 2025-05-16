@@ -168,6 +168,9 @@ jobs:
         echo "POSTGRES_USER=$POSTGRES_USER" >> .env
         echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
         echo "DATABASE_URL=$DATABASE_URL" >> .env
+
+    - name: Testing variable
+      run: echo "needs.artifact.outputs.kittygram_ip = ${{ needs.artifact.outputs.kittygram_ip }}
     - name: Copy docker-compose.yml via ssh
       uses: appleboy/scp-action@master
       with:
