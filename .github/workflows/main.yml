@@ -138,7 +138,25 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USER_NAME }}/kittygram_gateway:latest
 
-
+  set_ip:
+    outputs:
+      kittygram_ip: ${{ steps.set_ip.outputs.ip }}
+    if: ${{ github.event.inputs.action == 'apply' }}
+    runs-on: ubuntu-latest
+    needs: terraform
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4#
+    - name: Download IP artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: kittygram_ip
+        path: ./
+    - name: Set IP
+      id: set_ip
+      run: |
+        IP=$(cat ./kittygram_ip.txt)
+        echo "ip=$IP" >> $GITHUB_OUTPUT
 
   deploy:
     if: ${{ github.event.inputs.action == 'apply' }}
@@ -147,19 +165,12 @@ jobs:
       - build_backend_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
+      - set_ip
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
-    - name: Download IP artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: kittygram_ip
-        path: ./
-    - name: Set IP
-      id: KITTYGRAM_IP
-      run: |
-        IP=$(cat ./kittygram_ip.txt)
-        echo "KITTYGRAM_IP=$IP" >> $GITHUB_OUTPUT
+    - shell: bash
+      run: echo ${{ needs.set_ip.outputs.kittygram_ip }}
     - shell: bash
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
@@ -175,7 +186,7 @@ jobs:
       uses: appleboy/scp-action@master
       with:
         #host: ${{ secrets.HOST }}
-        host: ${{ env.KITTYGRAM_IP }}
+        host: ${{ needs.set_ip.outputs.kittygram_ip }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         source: "docker-compose.production.yml"
@@ -184,7 +195,7 @@ jobs:
       uses: appleboy/ssh-action@master
       with:
         #host: ${{ secrets.HOST }}
-        host: ${{ env.KITTYGRAM_IP }}
+        host: ${{ needs.set_ip.outputs.kittygram_ip }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
@@ -202,6 +213,7 @@ jobs:
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
       - deploy
+      - set_ip
     steps:
     - name: Check out code
       uses: actions/checkout@v3
@@ -217,7 +229,7 @@ jobs:
       env:
         REPOSITORY_USER_NAME: ${{ secrets.REPOSITORY_USER_NAME }}
         #DOMAIN: ${{ secrets.DOMAIN }}
-        DOMAIN: ${{ env.KITTYGRAM_IP}}
+        DOMAIN: ${{ needs.set_ip.outputs.kittygram_ip}}
         DOCKER_HUB_USER_NAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
       run: |
         echo "repo_owner: $REPOSITORY_USER_NAME" >> tests.yml
