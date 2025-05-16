@@ -19,6 +19,8 @@ on:
           required: true
         SECRET_KEY:
           required: true
+        YC_KEY_JSON:
+          required: true
 
 jobs:
   plan:
