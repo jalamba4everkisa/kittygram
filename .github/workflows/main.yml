@@ -64,6 +64,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: artifact
     steps:
+    - name: Testing variable
+      run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
     - name: Check out code
       uses: actions/checkout@v3
     - name: Set up Python
@@ -77,11 +79,14 @@ jobs:
     - name: Test with flake8
       run: python -m flake8 --ignore=F401,E501,W291,W292,E301,W293,E123,I001,I004,E265,I003   backend/
 
+
   build_backend_and_push_to_docker_hub:
     if: ${{ github.event.inputs.action == 'apply' }}
     runs-on: ubuntu-latest
     needs: tests
     steps:
+      - name: Testing variable
+        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -108,6 +113,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     steps:
+      - name: Testing variable
+        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -129,6 +136,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     steps:
+      - name: Testing variable
+        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -155,6 +164,8 @@ jobs:
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
     steps:
+    - name: Testing variable
+      run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
     - name: Checkout repo
       uses: actions/checkout@v3
     - shell: bash
@@ -168,8 +179,6 @@ jobs:
         echo "POSTGRES_USER=$POSTGRES_USER" >> .env
         echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> .env
         echo "DATABASE_URL=$DATABASE_URL" >> .env
-    - name: Testing variable
-      run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
     - name: Copy docker-compose.yml via ssh
       uses: appleboy/scp-action@master
       with:
