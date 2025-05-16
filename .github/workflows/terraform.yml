@@ -84,7 +84,9 @@ jobs:
          terraform apply -auto-approve
          IP=$(terraform output -raw kittygram_ip)
          echo "VM IP: $IP"
-         echo "$IP" > kittygram_ip.txt
+         touch kittygram_ip.txt
+         echo "$IP" >> kittygram_ip.txt
+         cat kittygram_ip.txt
         env:
           TF_VAR_PUB_SSH_KEY: ${{ secrets.TF_VAR_PUB_SSH_KEY }}
           TF_VAR_YC_CLOUD_ID: ${{ secrets.TF_VAR_YC_CLOUD_ID }}
