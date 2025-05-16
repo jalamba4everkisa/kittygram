@@ -43,14 +43,6 @@ jobs:
       with:
         name: kittygram_ip
         path: ./
-    
-    #- name: Read IP from file
-    #  id: ip
-    #  run: |
-    #    IP=$(cat ./infra/kittygram_ip.txt)
-    #    echo "IP from file: $IP"
-    #    echo "ip=$IP" >> $GITHUB_OUTPUT
-
     - name: Set IP
       id: set_outputs
       run: |
@@ -64,8 +56,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: artifact
     steps:
-    - name: Testing variable
-      run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
+
     - name: Check out code
       uses: actions/checkout@v3
     - name: Set up Python
@@ -85,8 +76,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     steps:
-      - name: Testing variable
-        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -113,8 +102,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     steps:
-      - name: Testing variable
-        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -136,8 +123,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     steps:
-      - name: Testing variable
-        run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Set up Docker Buildx
@@ -158,16 +143,21 @@ jobs:
 
   deploy:
     if: ${{ github.event.inputs.action == 'apply' }}
+    outputs:
+      kittygram_ip: ${{ steps.set_outputs.outputs.kittygram_ip }}
     runs-on: ubuntu-latest
     needs:
       - build_backend_and_push_to_docker_hub
       - build_frontend_and_push_to_docker_hub
       - build_gateway_and_push_to_docker_hub
     steps:
-    - name: Testing variable
-      run: echo "${{ needs.artifact.outputs.kittygram_ip }}"
     - name: Checkout repo
       uses: actions/checkout@v3
+    - name: Set IP
+      id: set_outputs
+      run: |
+        IP=$(cat ./kittygram_ip.txt)
+        echo "::set-output name=kittygram_ip::$IP"
     - shell: bash
       env:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
