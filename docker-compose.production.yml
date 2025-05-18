@@ -10,6 +10,11 @@ services:
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 5432 -q"]
+      interval: 5s
+      timeout: 2s
+      retries: 3
   backend:
     container_name: backend
     image: jalambakisa/kittygram_backend
@@ -17,7 +22,8 @@ services:
     volumes:
       - media:/app/media/
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   frontend:
     container_name: frontend
     env_file: .env
@@ -26,7 +32,7 @@ services:
     container_name: gateway
     image: jalambakisa/kittygram_gateway
     ports:
-      - "80:80" 
+      - "80:80"
     volumes:
       - static:/static
       - media:/media
