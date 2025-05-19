@@ -25,7 +25,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    depends_on:
       frontend:
         condition: service_started
   frontend:
