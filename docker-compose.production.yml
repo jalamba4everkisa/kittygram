@@ -20,14 +20,20 @@ services:
     image: jalambakisa/kittygram_backend
     env_file: .env
     volumes:
+      - static:/backend_static/
       - media:/app/media/
     depends_on:
       postgres:
         condition: service_healthy
+    depends_on:
+      frontend:
+        condition: service_started
   frontend:
     container_name: frontend
     env_file: .env
     image: jalambakisa/kittygram_frontend
+    volumes:
+      - static:/app/build
   gateway:
     container_name: gateway
     image: jalambakisa/kittygram_gateway
