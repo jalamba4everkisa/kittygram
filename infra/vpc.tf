@@ -16,21 +16,18 @@ resource "yandex_vpc_security_group" "kittygram-sg" {
   ingress {
     protocol       = "TCP"
     description    = "Allow http port"
-    v4_cidr_blocks = ["192.168.1.0/24"]
     port           = 80
   }
 
   ingress {
     protocol       = "TCP"
     description    = "Allow ssh port"
-    v4_cidr_blocks = ["192.168.1.0/24"]
     port           = 22
   }
 
   egress {
     protocol       = "ANY"
     description    = "Allow all egress trafic"
-    v4_cidr_blocks = ["192.168.1.0/24"]
-    port = -1
+    v4_cidr_blocks    = ["0.0.0.0/0"]
   }
 }
