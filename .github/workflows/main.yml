@@ -247,7 +247,7 @@ jobs:
         DOCKER_HUB_USER_NAME: ${{ secrets.DOCKER_HUB_USER_NAME }}
       run: |
         echo "repo_owner: $REPOSITORY_USER_NAME" >> tests.yml
-        echo "kittygram_domain: $DOMAIN" >> tests.yml
+        echo "kittygram_domain: http://$DOMAIN" >> tests.yml
         echo "dockerhub_username: $DOCKER_HUB_USER_NAME" >> tests.yml
     - name: Run Yandex Tests
       run: pytest tests
